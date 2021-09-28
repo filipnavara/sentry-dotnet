@@ -1,5 +1,7 @@
 using System;
 using System.Threading;
+using Sentry.Extensibility;
+using Sentry.Infrastructure;
 
 namespace Sentry
 {
@@ -60,16 +62,26 @@ namespace Sentry
         /// <summary>
         /// Initializes a new instance of <see cref="Session"/>.
         /// </summary>
-        public Session(string? distinctId, string release, string? environment)
+        public Session(SentryOptions options, string? distinctId, string release, string? environment)
             : this(
                 SentryId.Create(),
                 distinctId,
-                DateTimeOffset.Now,
+                // GetDateTimeOffset(options),
+                new DateTimeOffset(2021, 4, 19, 9, 0, 0, TimeSpan.Zero),
                 release,
                 environment,
                 null,
                 null)
         {
+        }
+
+        private static DateTimeOffset GetDateTimeOffset(SentryOptions options)
+        {
+            options.DiagnosticLogger?.LogDebug("Got Called.");
+            var dateTimeOffset = DateTimeOffset.Now;
+            options.DiagnosticLogger?.LogDebug("Did Not Get Stuck.");
+
+            return dateTimeOffset;
         }
 
         /// <summary>
